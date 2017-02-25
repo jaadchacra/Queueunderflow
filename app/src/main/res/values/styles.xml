@@ -1,0 +1,32 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#334b5f</item>
+        <item name="colorPrimaryDark">#334b5f</item>
+        <item name="android:statusBarColor">@color/statusBar</item>
+        <item name="colorAccent">#334b5f</item>
+
+        <item name="android:textColorHint">#334b5f</item>
+    </style>
+
+    <style name="FooBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#ffffff</item>
+        <item name="colorPrimaryDark">#ffffff</item>
+        <item name="colorAccent">#ffffff</item>
+
+
+    </style>
+
+
+
+
+
+
+
+
+
+
+</resources>
