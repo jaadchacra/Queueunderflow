@@ -69,14 +69,11 @@ public class QuestionsList extends AppCompatActivity {
 
                             QuestItem item = new QuestItem();
 
-                           String title = userData.getString("title");
-                            Date postDate = userData.getCreatedAt();
-
+                            String title = userData.getString("title");
                             String owner = "#";
-
                             owner += userData.getString("owner");
-
-
+                            Date postDate = userData.getCreatedAt();
+                            String postId = userData.getObjectId();
                             ArrayList<String> tags = (ArrayList<String>) userData.get("tags");
 
 
@@ -123,6 +120,7 @@ public class QuestionsList extends AppCompatActivity {
                             String description = userData.getString("description");
 
                             item.setTags(tags);
+                            item.setPostId(postId);
                             item.setPostDate(postDate);
                             item.setqDescription(description);
                             item.setqOwner(owner);

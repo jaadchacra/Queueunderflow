@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
+import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import com.example.joseph.queueunderflow.R;
 import com.example.joseph.queueunderflow.headquarters.QuestionsList;
 import com.example.joseph.queueunderflow.headquarters.skills.Skill;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
@@ -60,6 +62,7 @@ import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 
@@ -154,6 +157,23 @@ private RecyclerView postlv;
 
 
 
+                //Sets Time of Post
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+                long time = items.get(position).getPostDate().getTime();
+                long now = System.currentTimeMillis();
+
+                if(now - time <60000){
+                    holder.timeago.setText("now");
+                }else{
+                    CharSequence ago =
+                            DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
+
+
+                    holder.timeago.setText(ago);
+                }
+
+
 
                 holder.setUiPageViewController();
 
@@ -194,7 +214,7 @@ private RecyclerView postlv;
         private ImageView[] dots;
         private ViewPagerAdapter mViewPagerAdapter;
         private Context contxt;
-        private PhotoHolder thisPhoto;
+        private TextView timeago;
      private ArrayList<Integer> calcHeights;
 
 
@@ -222,12 +242,13 @@ private RecyclerView postlv;
 
 
             postOwner=(TextView) v.findViewById(R.id.postOwner);
+            timeago=(TextView) v.findViewById(R.id.timeago);
             postTitle=(TextView) v.findViewById(R.id.postTitle);
             postDescription=(TextView) v.findViewById(R.id.postDescription);
             intro_images = (ViewPager) v.findViewById(R.id.pager_introduction);
             pager_indicator = (LinearLayout) v.findViewById(R.id.viewPagerCountDots);
             contxt = v.getContext();
-            thisPhoto = this;
+
             calcHeights = new ArrayList<>();
 
 

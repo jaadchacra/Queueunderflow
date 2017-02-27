@@ -84,13 +84,14 @@ public class CardPage extends AppCompatActivity  {
         @Override
         protected Void doInBackground(Void... params) {
 
-            ParseQuery fetchUser = new ParseQuery("_User");
-            fetchUser.whereEqualTo("username", ParseUser.getCurrentUser().getUsername());
+            ParseQuery fetchUser = new ParseQuery("Answers");
+            fetchUser.whereEqualTo("posterid", items.get(0).getPostId());
             fetchUser.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(java.util.List<ParseObject> objects, ParseException e) {
                     if (e == null) {
                         for (ParseObject userData : objects) {
+
 
 
 

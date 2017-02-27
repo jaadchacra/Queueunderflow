@@ -34,6 +34,7 @@ public class QuestItem implements Serializable {
 
     private Date postDate;
 
+
     public ArrayList<String> getTags() {
         return tags;
     }
@@ -61,6 +62,16 @@ public class QuestItem implements Serializable {
 
     private String qOwner;
     private String qTitle;
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
+    }
+
+    private String postId;
 
     public String getqDescription() {
         return qDescription;

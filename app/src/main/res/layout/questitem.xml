@@ -50,7 +50,7 @@
 
             android:layout_below="@+id/userqItem"
             android:layout_alignStart="@+id/userqItem"
-            android:layout_toStartOf="@+id/skillPicqItem1"/>
+            android:layout_toStartOf="@+id/imageView10"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -142,7 +142,8 @@
             android:id="@+id/imageView10"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/menudots"/>
+            android:src="@drawable/menudots"
+            />
 
 
     </RelativeLayout>
