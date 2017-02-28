@@ -16,16 +16,23 @@ import com.example.joseph.queueunderflow.QuestItem;
 import com.example.joseph.queueunderflow.QuestRecycler;
 import com.example.joseph.queueunderflow.R;
 import com.example.joseph.queueunderflow.authentication.IntroPage;
+import com.example.joseph.queueunderflow.basicpost.BasicPost;
+import com.example.joseph.queueunderflow.basicpost.basicanswer.BasicAnswer;
+import com.example.joseph.queueunderflow.basicpost.basicanswer.imageanswer.ImageAnswer;
+import com.example.joseph.queueunderflow.basicpost.basicquestion.BasicQuestion;
+import com.example.joseph.queueunderflow.basicpost.basicquestion.imagequestion.ImageQuestion;
 import com.example.joseph.queueunderflow.headquarters.QuestionsList;
 import com.example.joseph.queueunderflow.headquarters.skills.SkillLoader;
 import com.example.joseph.queueunderflow.viewpager.ViewPagerAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,7 +47,7 @@ public class CardPage extends AppCompatActivity  {
     private PostRecycler mAdapter;
 
 
-    private ArrayList<QuestItem> items;
+    private ArrayList<BasicPost> items;
 
     private String  questId;
     private String  owner;
@@ -64,7 +71,7 @@ public class CardPage extends AppCompatActivity  {
 
 
         if (extras != null) {
-            items = (ArrayList<QuestItem>) extras.getSerializable("items");
+            items = (ArrayList<BasicPost>) extras.getSerializable("items");
         }
 
 
@@ -74,6 +81,8 @@ public class CardPage extends AppCompatActivity  {
         mAdapter = new PostRecycler(CardPage.this,items,mAdapter);
 
         poslv.setAdapter(mAdapter);
+
+        new LoadPost().execute();
 
 
     }
@@ -92,6 +101,59 @@ public class CardPage extends AppCompatActivity  {
                     if (e == null) {
                         for (ParseObject userData : objects) {
 
+
+                            String owner = "#";
+                            owner += userData.getString("owner");
+                            String description = userData.getString("Description");
+                            Date postDate = userData.getCreatedAt();
+                            String postId = userData.getObjectId();
+
+
+                            ArrayList<String> images = new ArrayList<String>();
+
+                            ParseFile qImage = (ParseFile) userData.get("image1");
+                            if(qImage == null){
+
+                                // Create BasicQuestion with no images
+                                BasicAnswer basicQuestion = new BasicAnswer(owner,description,postId,postDate,false);
+                                items.add(basicQuestion);
+                                mAdapter.notifyDataSetChanged();
+
+                            }else {
+                                String imageUrl = qImage.getUrl();//live url
+
+
+                                images.add(imageUrl);
+
+
+                                qImage = (ParseFile) userData.get("image2");
+
+                                if (qImage == null) {
+                                    //Do nothing
+                                } else {
+                                    imageUrl = qImage.getUrl();//live url
+
+
+                                    images.add(imageUrl);
+
+
+                                    qImage = (ParseFile) userData.get("image3");
+
+                                    if (qImage == null) {
+
+                                    } else {
+                                        imageUrl = qImage.getUrl();//live url
+
+                                        images.add(imageUrl);
+                                    }
+
+
+                                }
+
+                                ImageAnswer imageQuestion = new ImageAnswer(owner,description,postId,postDate,images,false);
+                                items.add(imageQuestion);
+                                mAdapter.notifyDataSetChanged();
+                            }
 
 
 

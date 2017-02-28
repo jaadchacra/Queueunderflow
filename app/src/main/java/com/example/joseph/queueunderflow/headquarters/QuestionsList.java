@@ -11,6 +11,9 @@ import android.view.WindowManager;
 import com.example.joseph.queueunderflow.QuestItem;
 import com.example.joseph.queueunderflow.QuestRecycler;
 import com.example.joseph.queueunderflow.R;
+import com.example.joseph.queueunderflow.basicpost.BasicPost;
+import com.example.joseph.queueunderflow.basicpost.basicquestion.BasicQuestion;
+import com.example.joseph.queueunderflow.basicpost.basicquestion.imagequestion.ImageQuestion;
 import com.example.joseph.queueunderflow.headquarters.skills.SkillLoader;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -34,7 +37,7 @@ public class QuestionsList extends AppCompatActivity {
     private LinearLayoutManager mLinearLayoutManager;
     private QuestRecycler mAdapter;
 
-    private ArrayList<QuestItem> items = new ArrayList<>();
+    private ArrayList<BasicPost> items = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +70,12 @@ public class QuestionsList extends AppCompatActivity {
                     if (e == null) {
                         for (ParseObject userData : objects) {
 
-                            QuestItem item = new QuestItem();
+
 
                             String title = userData.getString("title");
                             String owner = "#";
                             owner += userData.getString("owner");
+                            String description = userData.getString("description");
                             Date postDate = userData.getCreatedAt();
                             String postId = userData.getObjectId();
                             ArrayList<String> tags = (ArrayList<String>) userData.get("tags");
@@ -82,15 +86,17 @@ public class QuestionsList extends AppCompatActivity {
                             ParseFile qImage = (ParseFile) userData.get("image1");
                             if(qImage == null){
 
-                                // images.add(Uri.parse("https://s24.postimg.org/4t25k2v7p/flowiboss.png"));
-                                item.setHasImage(false);
+                                // Create BasicQuestion with no images
+                                BasicQuestion basicQuestion = new BasicQuestion(owner,title,description,postId,postDate,tags);
+                                items.add(basicQuestion);
+
                             }else{
                                 String imageUrl = qImage.getUrl() ;//live url
 
 
                                 images.add(imageUrl);
 
-                                item.setHasImage(true);
+
                                 qImage = (ParseFile) userData.get("image2");
 
                                 if(qImage == null){
@@ -114,23 +120,16 @@ public class QuestionsList extends AppCompatActivity {
 
 
                                 }
+
+                                //Create ImageQuestion
+                                ImageQuestion imageQuestion = new ImageQuestion(owner,title,description,postId,postDate,tags,images);
+                                items.add(imageQuestion);
                             }
 
 
-                            String description = userData.getString("description");
-
-                            item.setTags(tags);
-                            item.setPostId(postId);
-                            item.setPostDate(postDate);
-                            item.setqDescription(description);
-                            item.setqOwner(owner);
-                            item.setqTitle(title);
-                            if(item.isHasImage()){
-                                item.setImagesUri(images);
-                            }
 
 
-                            items.add(item);
+
 
 
                         }

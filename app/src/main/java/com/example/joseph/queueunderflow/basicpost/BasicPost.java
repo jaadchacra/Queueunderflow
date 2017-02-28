@@ -1,13 +1,13 @@
 package com.example.joseph.queueunderflow.basicpost;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by josep on 2/28/2017.
  */
-abstract public class BasicPost {
+abstract public class BasicPost implements Serializable {
     private String qOwner;
-    private String qTitle;
     private String qDescription;
     private String postId;
 
@@ -20,16 +20,15 @@ abstract public class BasicPost {
     //Default Constructor
     public BasicPost(){
         qOwner = "";
-        qTitle = "";
         qDescription = "";
         postId = "";
     }
 
-    public BasicPost(String qOwner,String qTitle,String qDescription,String postId){
+    public BasicPost(String qOwner,String qDescription,String postId,Date postDate){
         this.qOwner = qOwner;
-        this.qTitle = qTitle;
         this.qDescription = qDescription;
         this.postId = postId;
+        this.postDate = postDate;
     }
 
 
@@ -42,13 +41,7 @@ abstract public class BasicPost {
         this.qOwner = qOwner;
     }
 
-    public String getqTitle() {
-        return qTitle;
-    }
 
-    public void setqTitle(String qTitle) {
-        this.qTitle = qTitle;
-    }
 
     public String getqDescription() {
         return qDescription;

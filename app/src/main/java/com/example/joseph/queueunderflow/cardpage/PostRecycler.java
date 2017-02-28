@@ -25,6 +25,10 @@ import android.widget.TextView;
 
 import com.example.joseph.queueunderflow.QuestItem;
 import com.example.joseph.queueunderflow.R;
+import com.example.joseph.queueunderflow.basicpost.BasicPost;
+import com.example.joseph.queueunderflow.basicpost.basicanswer.imageanswer.ImageAnswer;
+import com.example.joseph.queueunderflow.basicpost.basicquestion.BasicQuestion;
+import com.example.joseph.queueunderflow.basicpost.basicquestion.imagequestion.ImageQuestion;
 import com.example.joseph.queueunderflow.headquarters.QuestionsList;
 import com.example.joseph.queueunderflow.headquarters.skills.Skill;
 
@@ -71,7 +75,7 @@ import butterknife.BindView;
  */
 public class PostRecycler extends RecyclerView.Adapter<PostRecycler.PhotoHolder>  {
 
-    private ArrayList<QuestItem> items;
+    private ArrayList<BasicPost> items;
 
 private RecyclerView postlv;
 
@@ -79,7 +83,7 @@ private RecyclerView postlv;
     private  PostRecycler mAdapter;
 
 
-    public PostRecycler(CardPage mainActivity, ArrayList<QuestItem> items,PostRecycler mAdapter) {
+    public PostRecycler(CardPage mainActivity, ArrayList<BasicPost> items, PostRecycler mAdapter) {
 
         context = mainActivity;
         this.items = items;
@@ -91,8 +95,10 @@ private RecyclerView postlv;
 
     @Override
     public int getItemViewType(int position) {
-        if(items.get(position).isHasImage()){
+        if(items.get(position) instanceof ImageQuestion || items.get(position) instanceof BasicQuestion){
             return 1;
+        }else if(items.get(position) instanceof ImageAnswer){
+            return 0;
         }else{
             return 0;
         }
@@ -107,7 +113,7 @@ private RecyclerView postlv;
         switch (viewType) {
             case 0:
                  inflatedView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.postwimage, parent, false);
+                        .inflate(R.layout.answerwimage, parent, false);
                 return new PhotoHolder(inflatedView);
 
 
@@ -130,54 +136,114 @@ private RecyclerView postlv;
     @Override
     public void onBindViewHolder(final PostRecycler.PhotoHolder holder, final int position) {
 
+        String title = "";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        long time = items.get(position).getPostDate().getTime();
+        long now = System.currentTimeMillis();
 
 
-        switch (holder.getItemViewType()) {
-            case 0:
+        if(getItemViewType(position) == 0){
+            holder.postOwner.setText(items.get(position).getqOwner().toString());
 
 
+            holder.postDescription.setText(items.get(position).getqDescription().toString());
 
-            case 1:
-                holder.postOwner.setText(items.get(position).getqOwner().toString());
-                holder.postTitle.setText(items.get(position).getqTitle().toString());
-                holder.postDescription.setText(items.get(position).getqDescription().toString());
-
-                ArrayList<String> urlList = items.get(position).getImagesUri();
+            if(items.get(position) instanceof ImageAnswer){
+                ArrayList<String> urlList = ((ImageAnswer)items.get(position)).getImagesUri();
                 ArrayList<Uri>uriList = new ArrayList<>();
                 for(int i=0;i<urlList.size();i++){
                     Uri imageUri = Uri.parse(urlList.get(i).toString());
                     uriList.add(imageUri);
                 }
-
-               holder.mViewPagerAdapter = new ViewPagerAdapter(context, uriList,holder);
+                holder.mViewPagerAdapter = new ViewPagerAdapter(context, uriList,holder);
 
 
                 holder.intro_images.setAdapter(holder.mViewPagerAdapter);
                 holder.intro_images.setCurrentItem(0);
 
 
-
-                //Sets Time of Post
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-                long time = items.get(position).getPostDate().getTime();
-                long now = System.currentTimeMillis();
-
-                if(now - time <60000){
-                    holder.timeago.setText("now");
-                }else{
-                    CharSequence ago =
-                            DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
+            }else{
+                ArrayList<Uri>uriList = new ArrayList<>();
+                holder.mViewPagerAdapter = new ViewPagerAdapter(context, uriList,holder);
 
 
-                    holder.timeago.setText(ago);
+                holder.intro_images.setAdapter(holder.mViewPagerAdapter);
+                holder.intro_images.setCurrentItem(0);
+            }
+
+
+
+
+
+            //Sets Time of Post
+
+
+            if(now - time <60000){
+                holder.timeago.setText("now");
+            }else{
+                CharSequence ago =
+                        DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
+
+
+                holder.timeago.setText(ago);
+            }
+
+
+
+            holder.setUiPageViewController();
+
+        }else if(getItemViewType(position) == 1){
+            holder.postOwner.setText(items.get(position).getqOwner().toString());
+
+
+            title = ((BasicQuestion)items.get(position)).getqTitle();
+            holder.postTitle.setText(title);
+            holder.postDescription.setText(items.get(position).getqDescription().toString());
+
+            if(items.get(position) instanceof ImageQuestion){
+                ArrayList<String> urlList = ((ImageQuestion)items.get(position)).getImagesUri();
+                ArrayList<Uri>uriList = new ArrayList<>();
+                for(int i=0;i<urlList.size();i++){
+                    Uri imageUri = Uri.parse(urlList.get(i).toString());
+                    uriList.add(imageUri);
                 }
+                holder.mViewPagerAdapter = new ViewPagerAdapter(context, uriList,holder);
+
+
+                holder.intro_images.setAdapter(holder.mViewPagerAdapter);
+                holder.intro_images.setCurrentItem(0);
+
+
+            }else{
+                ArrayList<Uri>uriList = new ArrayList<>();
+                holder.mViewPagerAdapter = new ViewPagerAdapter(context, uriList,holder);
+
+
+                holder.intro_images.setAdapter(holder.mViewPagerAdapter);
+                holder.intro_images.setCurrentItem(0);
+            }
 
 
 
-                holder.setUiPageViewController();
 
+
+            if(now - time <60000){
+                holder.timeago.setText("now");
+            }else{
+                CharSequence ago =
+                        DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
+
+
+                holder.timeago.setText(ago);
+            }
+
+
+
+
+            holder.setUiPageViewController();
         }
+
 
 
 
@@ -198,7 +264,6 @@ private RecyclerView postlv;
 
 
  public static class PhotoHolder extends RecyclerView.ViewHolder implements View.OnClickListener,ViewPager.OnPageChangeListener{
-
 
 
 

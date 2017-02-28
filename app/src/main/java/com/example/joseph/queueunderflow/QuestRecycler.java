@@ -18,6 +18,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.joseph.queueunderflow.authentication.IntroPage;
 import com.example.joseph.queueunderflow.authentication.askquestion.AskQuestionMain;
+import com.example.joseph.queueunderflow.basicpost.BasicPost;
+import com.example.joseph.queueunderflow.basicpost.basicquestion.BasicQuestion;
 import com.example.joseph.queueunderflow.cardpage.CardPage;
 import com.example.joseph.queueunderflow.headquarters.MainPage;
 import com.example.joseph.queueunderflow.headquarters.QuestionsList;
@@ -40,14 +42,14 @@ import java.util.TimeZone;
  */
 public class QuestRecycler extends RecyclerView.Adapter<QuestRecycler.PhotoHolder> {
 
-    private ArrayList<QuestItem> items;
+    private ArrayList<BasicPost> items;
 
 
 
     private Context context;
 
 
-    public QuestRecycler(QuestionsList mainActivity, ArrayList<QuestItem> items) {
+    public QuestRecycler(QuestionsList mainActivity, ArrayList<BasicPost> items) {
 
         context = mainActivity;
         this.items = items;
@@ -69,13 +71,13 @@ public class QuestRecycler extends RecyclerView.Adapter<QuestRecycler.PhotoHolde
 
 
 
-        final QuestItem item = items.get(position);
+        final BasicPost item = items.get(position);
         //holder.bindPhoto(post);
 
-        holder.titleqItem.setText(item.getqTitle());
+        holder.titleqItem.setText(((BasicQuestion)item).getqTitle());
         holder.userqItem.setText(item.getqOwner());
 
-        ArrayList<String> tags = item.getTags();
+        ArrayList<String> tags = ((BasicQuestion) item).getTags();
 
         if(!tags.isEmpty()){
             String tag = tags.get(0);
@@ -115,7 +117,7 @@ public class QuestRecycler extends RecyclerView.Adapter<QuestRecycler.PhotoHolde
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, CardPage.class);
-                    ArrayList<QuestItem> newItems = new ArrayList<QuestItem>();
+                    ArrayList<BasicPost> newItems = new ArrayList<BasicPost>();
                     newItems.add(items.get(position));
                     intent.putExtra("items",newItems);
                      context.startActivity(intent);

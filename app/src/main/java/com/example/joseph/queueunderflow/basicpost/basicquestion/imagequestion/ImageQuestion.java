@@ -2,17 +2,20 @@ package com.example.joseph.queueunderflow.basicpost.basicquestion.imagequestion;
 
 import com.example.joseph.queueunderflow.basicpost.basicquestion.BasicQuestion;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by josep on 2/28/2017.
  */
-public class ImageQuestion extends BasicQuestion {
+public class ImageQuestion extends BasicQuestion implements Serializable {
 
     private ArrayList<String> imagesUri;
 
-    public ImageQuestion(String qOwner,String qTitle,String qDescription,String postId,ArrayList<String> tags,ArrayList<String>imagesUri){
-        super(qOwner,qTitle,qDescription,postId,tags);
+    public ImageQuestion(String qOwner, String qTitle, String qDescription, String postId, Date postDate, ArrayList<String> tags, ArrayList<String>imagesUri){
+        super(qOwner,qTitle,qDescription,postId,postDate,tags);
+        this.imagesUri = new ArrayList<>();
         for(int i=0;i<imagesUri.size();i++){
             this.imagesUri.add(imagesUri.get(i));
         }
